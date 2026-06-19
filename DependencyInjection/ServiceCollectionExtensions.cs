@@ -4,18 +4,24 @@ using StackExchange.Redis;
 using ZeroCaching.Abstractions;
 using ZeroCaching.Configuration;
 using ZeroCaching.Implementation;
+using Microsoft.Extensions.Options;
 
 namespace ZeroCaching.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddZeroCaching(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    this IServiceCollection services,
+    IConfiguration configuration)
     {
-        var options = configuration
-                .GetSection("Cache")
-                .Get<CacheOptions>() ?? new();
+        services.AddOptions<CacheOptions>()
+            .Bind(configuration.GetSection("Cache"))
+            .ValidateOnStart();
+
+        services.AddSingleton<IValidateOptions<CacheOptions>, CacheOptionsValidation>();
+
+        // build options once
+        var options = configuration.GetSection("Cache").Get<CacheOptions>() ?? new();
 
         if (!options.Enabled)
         {
@@ -39,12 +45,10 @@ public static class ServiceCollectionExtensions
 
                         services.AddSingleton<IConnectionMultiplexer>(mux);
                         services.AddSingleton<ICacheService, RedisCacheService>();
-
                     }
                     catch (Exception ex)
                     {
-                        // Log the failure somewhere (ILogger ideally)
-                        Console.WriteLine($"Redis failed to build connecion, falling back to NoCacheService: {ex.Message}");
+                        Console.WriteLine($"Redis failed: {ex.Message}");
                         services.AddSingleton<ICacheService, NoCacheService>();
                     }
 

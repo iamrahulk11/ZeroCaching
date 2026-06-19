@@ -10,15 +10,3 @@ public class CacheOptions
 
     public int DefaultExpirationMinutes { get; set; } = 30;
 }
-public void Validate()
-    {
-        if (!Enabled)
-            return;
-
-        if (Provider == CacheProvider.Redis &&
-            string.IsNullOrWhiteSpace(ConnectionString))
-        {
-            throw new InvalidOperationException(
-                "Redis ConnectionString is required.");
-        }
-    }

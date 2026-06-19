@@ -1,36 +1,36 @@
-﻿namespace ZeroCaching.Configuration;
+﻿using Microsoft.Extensions.Options;
+using ZeroCaching.Configuration;
 
-public static class CacheOptionsValidator
+public sealed class CacheOptionsValidation : IValidateOptions<CacheOptions>
 {
-    public static void Validate(CacheOptions options)
+    public ValidateOptionsResult Validate(string? name, CacheOptions options)
     {
         if (options is null)
-            throw new ArgumentNullException(nameof(options));
+        {
+            return ValidateOptionsResult.Fail("CacheOptions is null");
+        }
 
         if (!options.Enabled)
-            return;
+        {
+            return ValidateOptionsResult.Success;
+        }
 
-        // Enum validation (important)
         if (!Enum.IsDefined(typeof(CacheProvider), options.Provider))
         {
-            throw new InvalidOperationException(
-                $"Invalid Cache Provider: {options.Provider}");
+            return ValidateOptionsResult.Fail($"Invalid CacheProvider: {options.Provider}");
         }
 
-        // Required field validation
-        if (options.Provider == CacheProvider.Redis)
+        if (options.Provider == CacheProvider.Redis &&
+            string.IsNullOrWhiteSpace(options.ConnectionString))
         {
-            if (string.IsNullOrWhiteSpace(options.ConnectionString))
-            {
-                throw new InvalidOperationException(
-                    "Cache: ConnectionString is required for Redis provider.");
-            }
+            return ValidateOptionsResult.Fail("Redis ConnectionString is required.");
         }
 
-        // Range validation (optional but good)
         if (options.DefaultExpirationMinutes <= 0)
         {
-            options.DefaultExpirationMinutes = 30;
+            options.DefaultExpirationMinutes = 30; // normalization allowed here
         }
+
+        return ValidateOptionsResult.Success;
     }
 }
