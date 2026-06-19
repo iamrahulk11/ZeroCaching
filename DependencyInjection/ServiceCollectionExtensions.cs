@@ -26,11 +26,30 @@ public static class ServiceCollectionExtensions
         switch (options.Provider)
         {
             case CacheProvider.Redis:
-                services.AddSingleton<IConnectionMultiplexer>(_ =>
-                    ConnectionMultiplexer.Connect(options.ConnectionString!));
+                {
+                    try
+                    {
+                        if (string.IsNullOrWhiteSpace(options.ConnectionString))
+                            throw new InvalidOperationException("Redis connection string is required.");
 
-                services.AddSingleton<ICacheService, RedisCacheService>();
-                break;
+                        var mux = ConnectionMultiplexer.Connect(options.ConnectionString);
+
+                        if (!mux.IsConnected)
+                            throw new InvalidOperationException("Unable to connect to Redis.");
+
+                        services.AddSingleton<IConnectionMultiplexer>(mux);
+                        services.AddSingleton<ICacheService, RedisCacheService>();
+
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log the failure somewhere (ILogger ideally)
+                        Console.WriteLine($"Redis failed to build connecion, falling back to NoCacheService: {ex.Message}");
+                        services.AddSingleton<ICacheService, NoCacheService>();
+                    }
+
+                    break;
+                }
 
             default:
                 throw new NotSupportedException(
