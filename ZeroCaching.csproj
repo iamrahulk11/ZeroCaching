@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+
+		<PackageId>ZeroCaching</PackageId>
+		<Version>1.0.0</Version>
+
+		<Authors>YourName</Authors>
+		<Company>YourCompany</Company>
+
+		<Description>High-performance distributed caching library supporting Redis.</Description>
+
+		<PackageTags>cache;redis;distributed caching</PackageTags>
+
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+
+		<AssemblyName>ZeroCaching</AssemblyName>
+		<RootNamespace>ZeroCaching</RootNamespace>
+
+	</PropertyGroup>
+
+</Project>
