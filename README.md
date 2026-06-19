@@ -6,7 +6,7 @@ ZeroCaching is a lightweight and configurable distributed caching library for .N
 
 - Simple integration with existing .NET applications
 - Configuration-driven setup
-- Supports distributed
+- Supports distributed cache
 - Built-in fallback when caching is disabled
 - Startup configuration validation
 - Dependency Injection friendly
