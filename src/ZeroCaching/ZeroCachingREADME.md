@@ -11,14 +11,13 @@ It provides a unified caching abstraction that allows applications to enable, di
 src
 └── ZeroCaching
     ├── ZeroCaching.csproj
-    │
     ├── Abstractions
     ├── Configuration
     ├── Factories
-    ├── Implementation
+    ├── Services
     ├── Validation
-    ├── DependencyInjection
-    └── ZeroCaching.cs
+    ├── Internals
+    └── DependencyInjection
 ```
 
 ---

@@ -18,10 +18,10 @@ ZeroCaching.sln
 │       ├── Abstractions
 │       ├── Configuration
 │       ├── Factories
-│       ├── Implementation
+│       ├── Services
 │       ├── Validation
-│       ├── DependencyInjection
-│       └── ZeroCaching.cs
+│       ├── Internals
+│       └── DependencyInjection
 │
 └── README.md
 ```
