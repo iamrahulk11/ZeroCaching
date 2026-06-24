@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using StackExchange.Redis;
 using ZeroCaching.Abstractions;
 using ZeroCaching.Configuration;
 using ZeroCaching.Factories;
@@ -18,7 +17,7 @@ public static class ServiceCollectionExtensions
     {
         // 1. Options + validation
         services.AddOptions<CacheOptions>()
-            .Bind(configuration.GetSection("Cache"))
+            .Bind(configuration.GetSection(ConfigurationTag.Cache.ToString()))
             .ValidateOnStart();
 
         services.AddSingleton<IValidateOptions<CacheOptions>, CacheOptionsValidation>();       

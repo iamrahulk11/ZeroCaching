@@ -1,4 +1,6 @@
-﻿namespace ZeroCaching.Validation;
+﻿using ZeroCaching.Internals;
+
+namespace ZeroCaching.Validation;
 
 internal static class ValidateServiceRequest
 {
@@ -7,7 +9,7 @@ internal static class ValidateServiceRequest
         if (string.IsNullOrWhiteSpace(key))
         {
             throw new ArgumentException(
-                "Cache key cannot be null or empty.",
+                exceptionMessages.CACHE_KEY_EMPTY_NOT_ALLOWED,
                 nameof(key));
         }
     }
@@ -20,7 +22,7 @@ internal static class ValidateServiceRequest
             throw new ArgumentOutOfRangeException(
                 nameof(expiry),
                 expiry,
-                "Expiration must be greater than zero.");
+                exceptionMessages.DEFAULT_EXPIRATION_MINUTES_MUST_BE_GREATER_THAN_ZERO);
         }
     }
 }

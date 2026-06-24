@@ -5,7 +5,8 @@
 
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		
+
+		<Version>$(VersionPrefix)</Version>
 		<PackageId>ZeroCaching</PackageId>
 		<Version>1.0.0</Version>
 		<Authors>iamrahulk11</Authors>
