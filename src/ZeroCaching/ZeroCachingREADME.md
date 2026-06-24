@@ -1,29 +1,24 @@
 # ZeroCaching
 
-ZeroCaching is a lightweight and configurable distributed caching library for .NET applications. 
-It simplifies cache management by providing a single caching abstraction while allowing applications to enable, disable, or switch cache providers through configuration 
-and graceful degradation when caching is unavailable.
+ZeroCaching is a lightweight and configurable distributed caching library for .NET applications.  
+It provides a unified caching abstraction that allows applications to enable, disable, or switch cache providers through configuration without changing application code.
 
 ---
 
 ## Project Structure
 
 ```
-ZeroCaching.sln
-│
-├── src
-│   └── ZeroCaching
-│       ├── ZeroCaching.csproj
-│       │
-│       ├── Abstractions
-│       ├── Configuration
-│       ├── Factories
-│       ├── Implementation
-│       ├── Validation
-│       ├── DependencyInjection
-│       └── ZeroCaching.cs
-│
-└── README.md
+src
+└── ZeroCaching
+    ├── ZeroCaching.csproj
+    │
+    ├── Abstractions
+    ├── Configuration
+    ├── Factories
+    ├── Implementation
+    ├── Validation
+    ├── DependencyInjection
+    └── ZeroCaching.cs
 ```
 
 ---

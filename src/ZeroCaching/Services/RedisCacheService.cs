@@ -2,7 +2,7 @@
 using StackExchange.Redis;
 using ZeroCaching.Abstractions;
 
-namespace ZeroCaching.Implementation;
+namespace ZeroCaching.Services;
 
 internal sealed class RedisCacheService : ICacheService
 {

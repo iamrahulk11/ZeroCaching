@@ -1,11 +1,11 @@
 ﻿using ZeroCaching.Abstractions;
 
-namespace ZeroCaching.Implementation;
+namespace ZeroCaching.Services;
 
 internal sealed class NoCacheService : ICacheService
 {
     public Task<T?> GetAsync<T>(string key)
-        => Task.FromResult<T?>(default);
+       => Task.FromResult(default(T));
 
     public Task SetAsync<T>(string key, T value, TimeSpan? expiration = null)
         => Task.CompletedTask;

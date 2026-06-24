@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
 using ZeroCaching.Configuration;
 
+namespace ZeroCaching.Validation;
+
 public sealed class CacheOptionsValidation : IValidateOptions<CacheOptions>
 {
     public ValidateOptionsResult Validate(string? name, CacheOptions options)
@@ -15,9 +17,10 @@ public sealed class CacheOptionsValidation : IValidateOptions<CacheOptions>
             return ValidateOptionsResult.Success;
         }
 
-        if (!Enum.IsDefined(typeof(CacheProvider), options.Provider))
+        if (!Enum.IsDefined(options.Provider))
         {
-            return ValidateOptionsResult.Fail($"Invalid CacheProvider: {options.Provider}");
+            return ValidateOptionsResult.Fail(
+                $"Invalid CacheProvider: {options.Provider}");
         }
 
         if (options.Provider == CacheProvider.Redis &&
@@ -26,9 +29,10 @@ public sealed class CacheOptionsValidation : IValidateOptions<CacheOptions>
             return ValidateOptionsResult.Fail("Redis ConnectionString is required.");
         }
 
-        if (options.DefaultExpirationMinutes <= 0)
+        if (options.DefaultExpirationMinutes < 1)
         {
-            options.DefaultExpirationMinutes = 30; // normalization allowed here
+            return ValidateOptionsResult.Fail(
+                "DefaultExpirationMinutes must be greater than or equal to 1.");
         }
 
         return ValidateOptionsResult.Success;

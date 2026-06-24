@@ -8,5 +8,5 @@ public class CacheOptions
 
     public string? ConnectionString { get; set; }
 
-    public int DefaultExpirationMinutes { get; set; } = 30;
+    public int? DefaultExpirationMinutes { get; set; }
 }
