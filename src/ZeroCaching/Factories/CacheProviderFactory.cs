@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using StackExchange.Redis;
 using ZeroCaching.Abstractions;
 using ZeroCaching.Configuration;
@@ -15,35 +14,45 @@ internal interface ICacheProviderFactory
 internal sealed class CacheProviderFactory : ICacheProviderFactory
 {
     private readonly CacheOptions _options;
-    private readonly IServiceProvider _sp;
 
-    public CacheProviderFactory(
-        IOptions<CacheOptions> options,
-        IServiceProvider sp)
+    public CacheProviderFactory(IOptions<CacheOptions> options)
     {
         _options = options.Value;
-        _sp = sp;
     }
 
     public ICacheService Create()
     {
+        var inner = CreateInnerCache();
+
+        return new CacheValidationService(inner);
+    }
+
+    private ICacheService CreateInnerCache()
+    {
         if (!_options.Enabled)
-            return _sp.GetRequiredService<NoCacheService>();
+            return new NoCacheService();
 
-        if (_options.Provider == CacheProvider.Redis)
+        return _options.Provider switch
         {
-            try
-            {
-                var redis = ConnectionMultiplexer.Connect(_options.ConnectionString!);
-                return new RedisCacheService(redis);
-            }
-            catch
-            {
-                // fallback
-                return _sp.GetRequiredService<NoCacheService>();
-            }
-        }
+            CacheProvider.Redis => CreateRedisOrFallback(),
+            _ => new NoCacheService()
+        };
+    }
 
-        return _sp.GetRequiredService<NoCacheService>();
+    private ICacheService CreateRedisOrFallback()
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(_options.ConnectionString))
+                return new NoCacheService();
+
+            var redis = ConnectionMultiplexer.Connect(_options.ConnectionString);
+
+            return new RedisCacheService(redis);
+        }
+        catch
+        {
+            return new NoCacheService();
+        }
     }
 }
